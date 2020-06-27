@@ -45,4 +45,5 @@ ggplot(data=subset(df_start, !is.na(trimmed_expenses)), aes(x=trimmed_expenses))
   scale_x_continuous(breaks = (0:10) * 100, labels = c(paste("$", 0:9 * 100, sep = ""), "$1000+")) +
   ylab("Count") +
   xlab("Expenses")
+grid::grid.raster(logo, x = 0.01, y = 0.01, just = c('left', 'bottom'), width = unit(1.5, 'cm'))
 
