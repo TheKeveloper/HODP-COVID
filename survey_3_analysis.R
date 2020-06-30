@@ -21,7 +21,7 @@ freq_plot <- function(df, x_var, options, title, x_lab, x_ticks=NULL, same_color
     xlab(x_lab) +
     ylab("Count") +
     geom_text(
-      aes(label=scales::percent(..count.. / nrow(filter(df_end, !is.na({{x_var}})))), group=1),
+      aes(label=scales::percent(..count.. / nrow(filter(df_end, !is.na({{x_var}}))), accuracy = 0.1), group=1),
       stat='count',
       vjust=-0.5) +
     scale_x_discrete(labels = str_wrap(x_ticks, width=20)) +
@@ -266,4 +266,4 @@ normal_time_plot <- freq_plot(df_end,
 normal_time_plot
 
 # Add logo
-grid::grid.raster(logo, x = 0.01, y = 0.01, just = c('left', 'bottom'), width = unit(1.5, 'cm'))
+grid::grid.raster(logo, x = 0.01, y = 0.01, just = c('left', 'bottom'), width = unit(1.3, 'cm'))
