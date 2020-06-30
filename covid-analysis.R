@@ -31,3 +31,19 @@ ggplot(data=subset(df_start, !is.na(timezone)), aes(x=factor(within_three))) +
   theme_hodp() +
   theme(legend.position = "none")
 grid::grid.raster(logo, x = 0.01, y = 0.01, just = c('left', 'bottom'), width = unit(1.5, 'cm'))
+
+df_start$trimmed_expenses = df_start$expenses
+for(i in 1:nrow(df_start)) {
+  if (!is.na(df_start$trimmed_expenses[i]) && df_start$trimmed_expenses[i] > 1000) {
+    df_start$trimmed_expenses[i] = 1000
+  }
+}
+ggplot(data=subset(df_start, !is.na(trimmed_expenses)), aes(x=trimmed_expenses)) +
+  geom_histogram(bins = 10, fill = primary[1]) + 
+  theme_hodp() +
+  labs(title="Out of pocket expenses from moving") +
+  scale_x_continuous(breaks = (0:10) * 100, labels = c(paste("$", 0:9 * 100, sep = ""), "$1000+")) +
+  ylab("Count") +
+  xlab("Expenses")
+grid::grid.raster(logo, x = 0.01, y = 0.01, just = c('left', 'bottom'), width = unit(1.5, 'cm'))
+
