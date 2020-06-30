@@ -146,18 +146,28 @@ fall_policies_options <- c("Fully on-campus",
                            "No preference",
                            "Other")
 
-fall_policies_plot <- df_end %>% 
-  select(preferred_policy, policy_if_admin) %>%
-  gather(key = "situation", value = "policy", na.rm = TRUE) %>%
-  ggplot(aes(factor(policy, levels=fall_policies_options), 
-             fill=factor(situation, levels=c("preferred_policy", "policy_if_admin")))) +
-  geom_bar(position = position_dodge(preserve="single")) +
+fall_policies_df <- data.frame("policy" = rep(fall_policies_options, times=2),
+                               "pov" = c(rep("preferred_policy", times=length(fall_policies_options)),
+                                         rep("policy_if_admin", times=length(fall_policies_options))),
+                               "prop" = rep(0, times=2*length(fall_policies_options)))
+
+for (row in 1:nrow(fall_policies_df)) {
+  current_policy <- fall_policies_df[row, "policy"]
+  current_pov <- fall_policies_df[row, "pov"]
+  v <- df_end[current_pov]
+  fall_policies_df[row, "count"] <- table(v)[current_policy]
+  fall_policies_df[row, "prop"] <- fall_policies_df[row, "count"] / length(v[!is.na(v)])
+}
+
+fall_policies_plot <- ggplot(fall_policies_df, aes(x=factor(policy, levels=fall_policies_options), y=count, fill=factor(pov, levels=c("preferred_policy", "policy_if_admin")))) +
+  geom_bar(stat="identity", position='dodge') +
   xlab('Preferred policy') +
   ylab('Count') +
   ggtitle("Preferred policies for fall 2020") +
   scale_x_discrete(labels=str_wrap(fall_policies_options, width=20)) +
   scale_fill_manual(values=primary, labels=c("Students' own preferences", 
                                              "Policies students would implement if they were administrators")) +
+  geom_text(aes(label=scales::percent(prop, accuracy=0.1)), position=position_dodge(width=0.9), vjust=-0.5) +
   theme_hodp() +
   theme(legend.title = element_blank())
 
@@ -198,18 +208,28 @@ contact_options <- c("Every day",
                      "Every week",
                      "Less frequently than every week")
 
-contact_plot <- df_end %>% 
-  select(contact_friends, contact_friends_not_text) %>%
-  gather(key = "medium", value = "frequency", na.rm = TRUE) %>%
-  ggplot(aes(factor(frequency, levels=contact_options), 
-             fill=factor(medium))) +
-  geom_bar(position = position_dodge(preserve="single")) +
+contact_df <- data.frame("frequency" = rep(contact_options, times=2),
+                         "medium" = c(rep("contact_friends", times=length(contact_options)),
+                                      rep("contact_friends_not_text", times=length(contact_options))),
+                         "prop" = rep(0, times=2*length(contact_options)))
+
+for (row in 1:nrow(contact_df)) {
+  current_freq <- contact_df[row, "frequency"]
+  current_medium <- contact_df[row, "medium"]
+  v <- df_end[current_medium]
+  contact_df[row, "count"] <- table(v)[current_freq]
+  contact_df[row, "prop"] <- contact_df[row, "count"] / length(v[!is.na(v)])
+}
+
+contact_plot <- ggplot(contact_df, aes(x=factor(frequency, levels=contact_options), y=count, fill=factor(medium, levels=c("contact_friends", "contact_friends_not_text")))) +
+  geom_bar(stat="identity", position='dodge') +
   xlab('Frequency of contact') +
   ylab('Count') +
   ggtitle("How often students have contacted their friends from school") +
   scale_x_discrete(labels=str_wrap(contact_options, width=20)) +
   scale_fill_manual(values=primary, labels=c("Through any medium", 
                                              "Through a medium other than texting/messaging")) +
+  geom_text(aes(label=scales::percent(prop, accuracy=0.1)), position=position_dodge(width=0.9), vjust=-0.5) +
   theme_hodp() +
   theme(legend.title = element_blank())
 
@@ -246,4 +266,4 @@ normal_time_plot <- freq_plot(df_end,
 normal_time_plot
 
 # Add logo
-grid::grid.raster(logo, x = 0.01, y = 0.01, just = c('left', 'bottom'), width = unit(1.3, 'cm'))
+grid::grid.raster(logo, x = 0.01, y = 0.01, just = c('left', 'bottom'), width = unit(1.5, 'cm'))
