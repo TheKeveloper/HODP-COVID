@@ -154,20 +154,20 @@ for(i in 1:nrow(df_start)) {
 ggplot(data=subset(df_start, !is.na(harvard_handling_mod)), aes(x=harvard_handling_mod)) +
   geom_histogram(bins = 10, fill = primary[1]) + 
   theme_hodp() +
-  labs(title="Harvard Handling Rating") +
+  labs(title="Harvard handling rating in March") +
   scale_x_continuous(breaks = 1:10) +
   ylab("Count") +
   xlab("Rating")
-grid::grid.raster(logo, x = 0.01, y = 0.01, just = c('left', 'bottom'), width = unit(1.5, 'cm'))
+grid::grid.raster(logo, x = 0.01, y = 0.01, just = c('left', 'bottom'), width = unit(1.3, 'cm'))
 
 ggplot(data=subset(df_start, !is.na(govt_handling)), aes(x=govt_handling)) +
   geom_histogram(bins = 10, fill = primary[1]) + 
   theme_hodp() +
-  labs(title="Government Handling Rating") +
+  labs(title="Government handling rating") +
   scale_x_continuous(breaks = 1:10) +
   ylab("Count") +
   xlab("Rating")
-grid::grid.raster(logo, x = 0.01, y = 0.01, just = c('left', 'bottom'), width = unit(1.5, 'cm'))
+grid::grid.raster(logo, x = 0.01, y = 0.01, just = c('left', 'bottom'), width = unit(1.3, 'cm'))
 
 ggplot(data=subset(df_start, normal_estimate != ""), aes(x=factor(normal_estimate))) + 
   geom_bar(aes(fill = factor(normal_estimate))) + 
@@ -184,11 +184,10 @@ ggplot(data=subset(df_start, normal_estimate != ""), aes(x=factor(normal_estimat
                               "6-12 months",
                               "12+ months",
                               "Never")) +
-  ylim(c(0, 250)) + 
   xlab("Estimate until back to normal") + 
   ylab("Count") + 
-  labs(title="How long until back to normal") +
+  labs(title="March predictions for time until back to normal") +
   theme_hodp() +
-  geom_text(stat='count', aes(label=percent((..count..)/sum((..count..)))), vjust=-1) +
+  geom_text(stat='count', aes(label=percent((..count..)/sum((..count..)))), vjust=-0.5) +
   theme(legend.position = "none")
 grid::grid.raster(logo, x = 0.01, y = 0.01, just = c('left', 'bottom'), width = unit(1.5, 'cm'))

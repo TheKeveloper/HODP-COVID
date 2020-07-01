@@ -46,12 +46,13 @@ sat_unsat_plot <- freq_plot(df_end,
 sat_unsat_plot
 
 # End-of-semester ratings of Harvard's response
-harvard_handling_plot <- freq_plot(df_end,
-                                   harvard_handling,
-                                   1:10,
-                                   "End-of-semester ratings of Harvard's response",
-                                   "Rating",
-                                   same_color = TRUE)
+harvard_handling_plot <- ggplot(data=subset(df_end, !is.na(harvard_handling)), aes(x=harvard_handling)) +
+  geom_histogram(bins = 10, fill = primary[1]) + 
+  theme_hodp() +
+  labs(title="Harvard handling rating at end of semester") +
+  scale_x_continuous(breaks = 1:10) +
+  ylab("Count") +
+  xlab("Rating")
 
 harvard_handling_plot
 
@@ -259,11 +260,11 @@ normal_time_options <- c("1-2 months",
 normal_time_plot <- freq_plot(df_end,
                               normal_time,
                               normal_time_options,
-                              "End-of-semester predictions for how long until back to normal",
+                              "End-of-semester predictions for time until back to normal",
                               "Estimate until back to normal",
                               same_color = TRUE)
 
 normal_time_plot
 
 # Add logo
-grid::grid.raster(logo, x = 0.01, y = 0.01, just = c('left', 'bottom'), width = unit(1.3, 'cm'))
+grid::grid.raster(logo, x = 0.01, y = 0.01, just = c('left', 'bottom'), width = unit(1.5, 'cm'))
