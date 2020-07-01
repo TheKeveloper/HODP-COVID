@@ -192,3 +192,24 @@ ggplot(data=subset(df_start, normal_estimate != ""), aes(x=factor(normal_estimat
   geom_text(stat='count', aes(label=percent((..count..)/sum((..count..)))), vjust=-1) +
   theme(legend.position = "none")
 grid::grid.raster(logo, x = 0.01, y = 0.01, just = c('left', 'bottom'), width = unit(1.5, 'cm'))
+
+
+ggplot(data=subset(df_start, preferred_grading != ""), aes(x=factor(preferred_grading))) + 
+  geom_bar(aes(fill = factor(preferred_grading))) + 
+  scale_fill_manual(values = c(primary[4], primary[1], primary[3], primary[2])) + 
+  scale_x_discrete(labels = str_wrap(c("Optional pass/fail",
+                                       "Universal pass/fail",
+                                       "Universal A/A-",
+                                       "Other"), width = 20), 
+                   limits = c("Optional pass/fail", 
+                              "Universal pass/fail",
+                              "Universal A/A-",
+                              "None of the above")) +
+  ylim(c(0, 350)) + 
+  xlab("Grading System") + 
+  ylab("Count") + 
+  labs(title="Students preferred grading system in March") +
+  theme_hodp() +
+  geom_text(stat='count', aes(label=percent((..count..)/sum((..count..)))), vjust=-1) +
+  theme(legend.position = "none")
+grid::grid.raster(logo, x = 0.01, y = 0.01, just = c('left', 'bottom'), width = unit(1.5, 'cm'))
