@@ -91,7 +91,7 @@ grid::grid.raster(logo, x = 0.01, y = 0.01, just = c('left', 'bottom'), width = 
 
 ggplot(data=subset(df_start, flu_symptoms != ""), aes(x=factor(flu_symptoms))) + 
   geom_bar(aes(fill = factor(flu_symptoms))) + 
-  scale_fill_manual(values = c(primary[2], primary[1], primary[4])) + 
+  scale_fill_manual(values = c(primary[2], primary[1], primary[3])) + 
   scale_x_discrete(labels = str_wrap(c("No symptoms",
                                        "Mild symptoms",
                                        "Severe symptoms"), width = 20), 
@@ -126,7 +126,7 @@ grid::grid.raster(logo, x = 0.01, y = 0.01, just = c('left', 'bottom'), width = 
 
 ggplot(data=subset(df_start, self_quarantined != ""), aes(x=factor(self_quarantined))) + 
   geom_bar(aes(fill = factor(self_quarantined))) + 
-  scale_fill_manual(values = c(primary[1], primary[2], primary[4])) + 
+  scale_fill_manual(values = c(primary[1], primary[2], primary[3])) + 
   scale_x_discrete(labels = str_wrap(c("No self-quarantine",
                                        "Self-quarantined from friends",
                                        "Self-quarantined from friends and family"), width = 20), 
