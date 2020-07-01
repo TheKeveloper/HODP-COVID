@@ -3,6 +3,7 @@ library(tidyverse)
 library(stringr)
 library(ggalluvial)
 
+df_start <- read.csv("covid_start_survey_data.csv")
 df_end <- read.csv("covid_end_survey_data.csv", na.strings = c("", "NA"))
 
 # Generic function for making a frequency bar chart
@@ -46,15 +47,51 @@ sat_unsat_plot <- freq_plot(df_end,
 sat_unsat_plot
 
 # End-of-semester ratings of Harvard's response
-harvard_handling_plot <- ggplot(data=subset(df_end, !is.na(harvard_handling)), aes(x=harvard_handling)) +
-  geom_histogram(bins = 10, fill = primary[1]) + 
+df_start$harvard_handling_mod <- df_start$harvard_handling
+for(i in 1:nrow(df_start)) {
+  if(df_start$harvard_handling_mod[i] == 0 && !is.na(df_start$harvard_handling_mod[i])) {
+    df_start$harvard_handling_mod[i] = 1
+  }
+}
+
+harvard_handling_df <- data.frame("rating" = rep(1:10, times=2),
+                                  "time" = c(rep("harvard_handling_mod", times=10),
+                                             rep("harvard_handling", times=10)),
+                                  "prop" = rep(0, times=20))
+
+for (row in 1:nrow(harvard_handling_df)) {
+  current_rating <- harvard_handling_df[row, "rating"]
+  current_time <- harvard_handling_df[row, "time"]
+  if (current_time == "harvard_handling_mod") {
+    v <- df_start[current_time]
+  } else{
+    v <- df_end[current_time]
+  }
+  harvard_handling_df[row, "count"] <- table(v)[current_rating]
+  harvard_handling_df[row, "prop"] <- harvard_handling_df[row, "count"] / length(v[!is.na(v)])
+}
+
+harvard_handling_plot <- ggplot(harvard_handling_df, aes(x=factor(rating, levels=1:10), y=prop, fill=factor(time, levels=c("harvard_handling_mod", "harvard_handling")))) +
+  geom_bar(stat="identity", position='dodge') +
+  xlab('Rating') +
+  ylab('Proportion') +
+  ggtitle("Rating Harvard's response") +
+  scale_fill_manual(values=primary, labels=c("Rating in March", "Rating at end of semester")) +
+  geom_text(aes(label=scales::percent(prop, accuracy=1)), position=position_dodge(width=0.9), vjust=-0.5) +
   theme_hodp() +
-  labs(title="Harvard handling rating at end of semester") +
-  scale_x_continuous(breaks = 1:10) +
-  ylab("Count") +
-  xlab("Rating")
+  theme(legend.title = element_blank())
 
 harvard_handling_plot
+
+# harvard_handling_plot <- ggplot(data=subset(df_end, !is.na(harvard_handling)), aes(x=harvard_handling)) +
+#   geom_histogram(bins = 10, fill = primary[1]) + 
+#   theme_hodp() +
+#   labs(title="Harvard handling rating at end of semester") +
+#   scale_x_continuous(breaks = 1:10) +
+#   ylab("Count") +
+#   xlab("Rating")
+# 
+# harvard_handling_plot
 
 # Changes to summer plans
 plans_options <- c("Internship/Industry Work",
@@ -125,16 +162,20 @@ for (row in 1:nrow(fall_off_df)) {
   fall_off_df[row, "prop"] <- fall_off_df[row, "count"] / length(v[!is.na(v)])
 }
 
-fall_off_plot <- ggplot(fall_off_df, aes(x=factor(situation, levels=situation_options), y=count, fill=factor(response, levels=c("Yes", "Unsure", "No")))) +
-  geom_bar(stat="identity", position='dodge') +
+fall_off_plot <- ggplot(fall_off_df, aes(x=factor(situation, levels=rev(situation_options)), y=count, fill=factor(response, levels=c("No", "Unsure", "Yes")))) +
+  geom_bar(stat="identity") +
   xlab('Hypothetical situation') +
   ylab('Count') +
   ggtitle("If fall 2020 were virtual, would students take the semester off?") +
-  scale_x_discrete(labels=str_wrap(situation_labels, width=20)) +
-  scale_fill_manual(values=rev(primary[1:3])) +
-  geom_text(aes(label=scales::percent(prop, accuracy=1)), position=position_dodge(width=0.9), vjust=-0.5) +
+  scale_x_discrete(labels=str_wrap(rev(situation_labels), width=20)) +
+  scale_fill_manual(values=primary[1:3]) +
+  guides(fill = guide_legend(reverse = TRUE)) +
+  coord_flip() +
+  geom_text(aes(label=scales::percent(prop, accuracy=1)), position="stack", hjust=1.3, size=5) +
   theme_hodp() +
-  theme(legend.title = element_blank())
+  theme(legend.title = element_blank(),
+        axis.text.y =element_text(size=13,  family="Helvetica"),
+        plot.title = element_text(size=20,  family="Helvetica", face = "bold", margin = margin(t = 0, r = 0, b = 10, l = 0)))
 
 fall_off_plot
 

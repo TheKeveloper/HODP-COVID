@@ -51,7 +51,7 @@ sum(df_start$expenses >= 1000, na.rm = T) / length(df_start$expenses[!is.na(df_s
 
 ggplot(data=df_start, aes(x=factor(workspace))) + 
   geom_bar(aes(fill = factor(workspace))) + 
-  scale_fill_manual(values = c(primary[4], primary[3], primary[1], primary[2])) + 
+  scale_fill_manual(values = c(primary[3], primary[4], primary[1], primary[2])) + 
   scale_x_discrete(labels = str_wrap(c("Reliable internet access and quiet space to work",
                                        "Only reliable internet access",
                                        "Only quiet space to work",
@@ -71,7 +71,7 @@ grid::grid.raster(logo, x = 0.01, y = 0.01, just = c('left', 'bottom'), width = 
 
 ggplot(data=subset(df_start, enrollment_changes != ""), aes(x=factor(enrollment_changes))) + 
   geom_bar(aes(fill = factor(enrollment_changes))) + 
-  scale_fill_manual(values = c(primary[3], primary[2], primary[4], primary[1])) + 
+  scale_fill_manual(values = c(primary[4], primary[2], primary[3], primary[1])) + 
   scale_x_discrete(labels = str_wrap(c("No enrollment changes",
                                        "Changed class to pass/fail",
                                        "Dropped a class",
@@ -163,7 +163,7 @@ grid::grid.raster(logo, x = 0.01, y = 0.01, just = c('left', 'bottom'), width = 
 ggplot(data=subset(df_start, !is.na(govt_handling)), aes(x=govt_handling)) +
   geom_histogram(bins = 10, fill = primary[1]) + 
   theme_hodp() +
-  labs(title="Government handling rating") +
+  labs(title="Rating the government's response") +
   scale_x_continuous(breaks = 1:10) +
   ylab("Count") +
   xlab("Rating")
@@ -204,10 +204,10 @@ ggplot(data=subset(df_start, preferred_grading != ""), aes(x=factor(preferred_gr
                               "Universal pass/fail",
                               "Universal A/A-",
                               "None of the above")) +
-  ylim(c(0, 350)) + 
+  ylim(c(0, 200)) + 
   xlab("Grading System") + 
   ylab("Count") + 
-  labs(title="Students preferred grading system in March") +
+  labs(title="Students' preferred grading system in March") +
   theme_hodp() +
   geom_text(stat='count', aes(label=percent((..count..)/sum((..count..)))), vjust=-1) +
   theme(legend.position = "none")
