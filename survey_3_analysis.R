@@ -21,7 +21,7 @@ freq_plot <- function(df, x_var, options, title, x_lab, x_ticks=NULL, same_color
     xlab(x_lab) +
     ylab("Count") +
     geom_text(
-      aes(label=scales::percent(..count.. / nrow(filter(df_end, !is.na({{x_var}})))), group=1),
+      aes(label=scales::percent(..count.. / nrow(filter(df_end, !is.na({{x_var}}))), accuracy = 0.1), group=1),
       stat='count',
       vjust=-0.5) +
     scale_x_discrete(labels = str_wrap(x_ticks, width=20)) +
@@ -46,12 +46,13 @@ sat_unsat_plot <- freq_plot(df_end,
 sat_unsat_plot
 
 # End-of-semester ratings of Harvard's response
-harvard_handling_plot <- freq_plot(df_end,
-                                   harvard_handling,
-                                   1:10,
-                                   "End-of-semester ratings of Harvard's response",
-                                   "Rating",
-                                   same_color = TRUE)
+harvard_handling_plot <- ggplot(data=subset(df_end, !is.na(harvard_handling)), aes(x=harvard_handling)) +
+  geom_histogram(bins = 10, fill = primary[1]) + 
+  theme_hodp() +
+  labs(title="Harvard handling rating at end of semester") +
+  scale_x_continuous(breaks = 1:10) +
+  ylab("Count") +
+  xlab("Rating")
 
 harvard_handling_plot
 
@@ -259,7 +260,7 @@ normal_time_options <- c("1-2 months",
 normal_time_plot <- freq_plot(df_end,
                               normal_time,
                               normal_time_options,
-                              "End-of-semester predictions for how long until back to normal",
+                              "End-of-semester predictions for time until back to normal",
                               "Estimate until back to normal",
                               same_color = TRUE)
 

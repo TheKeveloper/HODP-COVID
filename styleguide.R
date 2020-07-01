@@ -14,8 +14,8 @@ sidebysidebarplot <- c("#ef3e3e", "#2c3e50")
 theme_hodp <- function () { 
   theme_classic(base_size=12, base_family="Helvetica") %+replace%
     theme(
-      panel.background  = element_rect(fill="#FFFFFF", colour=NA),
-      plot.background = element_rect(fill="#FFFFFF", colour="#d3d3d3"),
+      #panel.background  = element_rect(fill="#FFFFFF", colour=NA),
+      #plot.background = element_rect(fill="#FFFFFF", colour="#d3d3d3"),
       legend.background = element_rect(fill="transparent", colour=NA),
       legend.key = element_rect(fill="transparent", colour=NA),
       plot.title = element_text(size=24,  family="Helvetica", face = "bold", margin = margin(t = 0, r = 0, b = 10, l = 0)),
