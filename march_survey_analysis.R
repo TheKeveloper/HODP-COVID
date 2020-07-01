@@ -91,7 +91,7 @@ grid::grid.raster(logo, x = 0.01, y = 0.01, just = c('left', 'bottom'), width = 
 
 ggplot(data=subset(df_start, flu_symptoms != ""), aes(x=factor(flu_symptoms))) + 
   geom_bar(aes(fill = factor(flu_symptoms))) + 
-  scale_fill_manual(values = c(primary[2], primary[1], primary[4])) + 
+  scale_fill_manual(values = c(primary[2], primary[1], primary[3])) + 
   scale_x_discrete(labels = str_wrap(c("No symptoms",
                                        "Mild symptoms",
                                        "Severe symptoms"), width = 20), 
@@ -126,7 +126,7 @@ grid::grid.raster(logo, x = 0.01, y = 0.01, just = c('left', 'bottom'), width = 
 
 ggplot(data=subset(df_start, self_quarantined != ""), aes(x=factor(self_quarantined))) + 
   geom_bar(aes(fill = factor(self_quarantined))) + 
-  scale_fill_manual(values = c(primary[1], primary[2], primary[4])) + 
+  scale_fill_manual(values = c(primary[1], primary[2], primary[3])) + 
   scale_x_discrete(labels = str_wrap(c("No self-quarantine",
                                        "Self-quarantined from friends",
                                        "Self-quarantined from friends and family"), width = 20), 
@@ -154,20 +154,20 @@ for(i in 1:nrow(df_start)) {
 ggplot(data=subset(df_start, !is.na(harvard_handling_mod)), aes(x=harvard_handling_mod)) +
   geom_histogram(bins = 10, fill = primary[1]) + 
   theme_hodp() +
-  labs(title="Harvard Handling Rating") +
+  labs(title="Harvard handling rating in March") +
   scale_x_continuous(breaks = 1:10) +
   ylab("Count") +
   xlab("Rating")
-grid::grid.raster(logo, x = 0.01, y = 0.01, just = c('left', 'bottom'), width = unit(1.5, 'cm'))
+grid::grid.raster(logo, x = 0.01, y = 0.01, just = c('left', 'bottom'), width = unit(1.3, 'cm'))
 
 ggplot(data=subset(df_start, !is.na(govt_handling)), aes(x=govt_handling)) +
   geom_histogram(bins = 10, fill = primary[1]) + 
   theme_hodp() +
-  labs(title="Government Handling Rating") +
+  labs(title="Government handling rating") +
   scale_x_continuous(breaks = 1:10) +
   ylab("Count") +
   xlab("Rating")
-grid::grid.raster(logo, x = 0.01, y = 0.01, just = c('left', 'bottom'), width = unit(1.5, 'cm'))
+grid::grid.raster(logo, x = 0.01, y = 0.01, just = c('left', 'bottom'), width = unit(1.3, 'cm'))
 
 ggplot(data=subset(df_start, normal_estimate != ""), aes(x=factor(normal_estimate))) + 
   geom_bar(aes(fill = factor(normal_estimate))) + 
@@ -184,10 +184,30 @@ ggplot(data=subset(df_start, normal_estimate != ""), aes(x=factor(normal_estimat
                               "6-12 months",
                               "12+ months",
                               "Never")) +
-  ylim(c(0, 250)) + 
   xlab("Estimate until back to normal") + 
   ylab("Count") + 
-  labs(title="How long until back to normal") +
+  labs(title="March predictions for time until back to normal") +
+  theme_hodp() +
+  geom_text(stat='count', aes(label=percent((..count..)/sum((..count..)))), vjust=-0.5) +
+  theme(legend.position = "none")
+grid::grid.raster(logo, x = 0.01, y = 0.01, just = c('left', 'bottom'), width = unit(1.5, 'cm'))
+
+
+ggplot(data=subset(df_start, preferred_grading != ""), aes(x=factor(preferred_grading))) + 
+  geom_bar(aes(fill = factor(preferred_grading))) + 
+  scale_fill_manual(values = c(primary[4], primary[1], primary[3], primary[2])) + 
+  scale_x_discrete(labels = str_wrap(c("Optional pass/fail",
+                                       "Universal pass/fail",
+                                       "Universal A/A-",
+                                       "Other"), width = 20), 
+                   limits = c("Optional pass/fail", 
+                              "Universal pass/fail",
+                              "Universal A/A-",
+                              "None of the above")) +
+  ylim(c(0, 350)) + 
+  xlab("Grading System") + 
+  ylab("Count") + 
+  labs(title="Students preferred grading system in March") +
   theme_hodp() +
   geom_text(stat='count', aes(label=percent((..count..)/sum((..count..)))), vjust=-1) +
   theme(legend.position = "none")
